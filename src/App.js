@@ -30,14 +30,16 @@ const App = () => {
 
   return (
     <>
-      <Container onKeyPress={handleKeyPress}>
+      <Container>
         <Row>
           <h2>Hello</h2>
         </Row>
         <Button onClick={() => dispatch(actions.rotate())}>Rotate</Button>
         <Button onClick={() => dispatch(actions.flip())}>Flip</Button>
       </Container>
-      <Container>{grid}</Container>
+      <Container tabIndex={0} r onKeyDown={handleKeyPress}>
+        {grid}
+      </Container>
     </>
   );
 };
