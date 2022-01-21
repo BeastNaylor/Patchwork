@@ -1,14 +1,13 @@
 {
   "files": {
-    "main.css": "/patchwork/static/css/main.073c9b0a.css",
-    "main.js": "/patchwork/static/js/main.947775c4.js",
-    "static/media/logo.svg": "/patchwork/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "main.css": "/patchwork/static/css/main.e6c13ad2.css",
+    "main.js": "/patchwork/static/js/main.6cc0f3d5.js",
     "index.html": "/patchwork/index.html",
-    "main.073c9b0a.css.map": "/patchwork/static/css/main.073c9b0a.css.map",
-    "main.947775c4.js.map": "/patchwork/static/js/main.947775c4.js.map"
+    "main.e6c13ad2.css.map": "/patchwork/static/css/main.e6c13ad2.css.map",
+    "main.6cc0f3d5.js.map": "/patchwork/static/js/main.6cc0f3d5.js.map"
   },
   "entrypoints": [
-    "static/css/main.073c9b0a.css",
-    "static/js/main.947775c4.js"
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.6cc0f3d5.js"
   ]
 }
