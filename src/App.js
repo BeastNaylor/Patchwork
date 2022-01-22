@@ -13,7 +13,7 @@ const App = () => {
   const dispatch = useDispatch();
 
   const handleKeyPress = (e) => {
-    switch (e.which) {
+    switch (e.key) {
       case "r":
         dispatch(actions.rotate());
         break;
