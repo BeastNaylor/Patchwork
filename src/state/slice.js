@@ -1,4 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import data from "../data/shapes.json";
+import shuffle from "../lib/shuffle";
 
 const initalCells = [];
 for (let row = 1; row <= 7; row++) {
@@ -7,46 +9,42 @@ for (let row = 1; row <= 7; row++) {
   }
 }
 
+const randomizeShapes = shuffle(data);
+
 const initialState = {
-  value: 0,
-  status: "idle",
   cells: initalCells,
   currentCell: null,
-  selectedShape: [
-    { x: -1, y: 0 },
-    { x: 0, y: 0 },
-    { x: 0, y: 1 },
-    { x: 1, y: 1 },
-  ],
+  shapes: randomizeShapes,
+  selectedShape: null,
 };
 
 const highlightCells = (state, action) => {
   let color = "green";
   var cell = action.payload;
   state.currentCell = cell;
-  const translatedCells = state.selectedShape.map((shape) => {
-    return {
-      column: shape.x + cell.column,
-      row: shape.y + cell.row,
-    };
-  });
-
-  if (
-    translatedCells.some(
-      (x) => x.column < 1 || x.column > 7 || x.row < 1 || x.row > 7
-    )
-  ) {
-    color = "red";
-  }
-
-  const cellsToHightlight = state.cells.filter((cell) => {
-    return translatedCells.some((shape) => {
-      return cell.column === shape.column && cell.row === shape.row;
+  if (state.selectedShape !== null) {
+    const translatedCells = state.selectedShape.map((shape) => {
+      return {
+        column: shape.x + cell.column,
+        row: shape.y + cell.row,
+      };
     });
-  });
-  cellsToHightlight.forEach((cell) => {
-    cell.color = color;
-  });
+    if (
+      translatedCells.some(
+        (x) => x.column < 1 || x.column > 7 || x.row < 1 || x.row > 7
+      )
+    ) {
+      color = "red";
+    }
+    const cellsToHightlight = state.cells.filter((cell) => {
+      return translatedCells.some((shape) => {
+        return cell.column === shape.column && cell.row === shape.row;
+      });
+    });
+    cellsToHightlight.forEach((cell) => {
+      cell.color = color;
+    });
+  }
 };
 
 const resetGrid = (state) => {
@@ -57,6 +55,11 @@ const resetGrid = (state) => {
 
 const resetCurrentCell = (state) => {
   state.currentCell = null;
+};
+
+const selectShape = (state, action) => {
+  var selectedShapeId = action.payload;
+  state.selectedShape = data.filter((x) => x.id === selectedShapeId)[0].cells;
 };
 
 const rotate = (state) => {
@@ -90,10 +93,11 @@ const gameSlice = createSlice({
     resetGrid,
     highlightCells,
     resetCurrentCell,
+    selectShape,
   },
 });
 
-export const selectCount = (state) => state.game.value;
+export const shapeChoices = (state) => state.game.shapes.slice(0, 3);
 export const selectCell = (state, column, row) =>
   state.game.cells.filter((x) => x.column === column && x.row === row)[0];
 

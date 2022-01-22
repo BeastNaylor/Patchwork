@@ -6,7 +6,7 @@ import PlayerInfo from "./components/PlayerInfo";
 import MovementScreen from "./components/MovementScreen";
 import TileGrid from "./components/TileGrid";
 import GridControls from "./components/GridControls";
-import ShapeSelection from "./components/ShapeSelection";
+import ShapeSelectionRow from "./components/ShapeSelectionRow";
 import ShapeOverview from "./components/ShapeOverview";
 
 const App = () => {
@@ -32,7 +32,7 @@ const App = () => {
         <MovementScreen />
         <TileGrid />
         <GridControls />
-        <ShapeSelection />
+        <ShapeSelectionRow />
         <ShapeOverview />
       </Container>
     </div>
