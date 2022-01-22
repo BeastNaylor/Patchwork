@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initalCells = [];
 for (let row = 1; row <= 7; row++) {
   for (let col = 1; col <= 7; col++) {
-    initalCells.push({ column: col, row: row, active: false, color: "grey" });
+    initalCells.push({ column: col, row: row, color: "#c9c9c9" });
   }
 }
 
@@ -45,14 +45,13 @@ const highlightCells = (state, action) => {
     });
   });
   cellsToHightlight.forEach((cell) => {
-    cell.active = true;
     cell.color = color;
   });
 };
 
 const resetGrid = (state) => {
   state.cells.forEach((cell) => {
-    cell.color = "grey";
+    cell.color = "#c9c9c9";
   });
 };
 

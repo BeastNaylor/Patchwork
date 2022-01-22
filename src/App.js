@@ -1,46 +1,41 @@
-import { Container, Row, Button, Label } from "reactstrap";
+import { Container } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { actions, selectCount } from "./state/slice";
-import TileSquare from "./components/TileSquare";
+import TitleBar from "./components/TitleBar";
+import PlayerInfo from "./components/PlayerInfo";
+import MovementScreen from "./components/MovementScreen";
+import TileGrid from "./components/TileGrid";
+import GridControls from "./components/GridControls";
+import ShapeSelection from "./components/ShapeSelection";
+import ShapeOverview from "./components/ShapeOverview";
 
 const App = () => {
   const dispatch = useDispatch();
-  const count = useSelector(selectCount);
 
   const handleKeyPress = (e) => {
-    console.log(e);
-    switch (e.key) {
+    switch (e.which) {
       case "r":
         dispatch(actions.rotate());
         break;
       case "f":
         dispatch(actions.flip());
         break;
+      default:
+        break;
     }
   };
-
-  let grid = [];
-  for (let row = 1; row <= 7; row++) {
-    let rows = [];
-    for (let col = 1; col <= 7; col++) {
-      rows.push(<TileSquare column={col} row={row} Active={false} />);
-    }
-    grid.push(<Row style={{ display: "flex" }}>{rows}</Row>);
-  }
-
   return (
-    <>
+    <div tabIndex={0} onKeyDown={handleKeyPress}>
+      <TitleBar />
       <Container>
-        <Row>
-          <h2>Hello</h2>
-        </Row>
-        <Button onClick={() => dispatch(actions.rotate())}>Rotate</Button>
-        <Button onClick={() => dispatch(actions.flip())}>Flip</Button>
+        <PlayerInfo />
+        <MovementScreen />
+        <TileGrid />
+        <GridControls />
+        <ShapeSelection />
+        <ShapeOverview />
       </Container>
-      <Container tabIndex={0} r onKeyDown={handleKeyPress}>
-        {grid}
-      </Container>
-    </>
+    </div>
   );
 };
 
