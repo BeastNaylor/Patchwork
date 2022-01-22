@@ -13,17 +13,31 @@ const ShapeSelectionRow = () => {
   };
 
   return (
-    <Row className={"mt-2"} style={{ justifyContent: "center" }}>
+    <Row
+      className={"mt-2"}
+      style={{ justifyContent: "center", flexFlow: "row nowrap" }}
+    >
       {shapes.map((x) => {
         return (
-          <div
-            key={x.id}
-            style={{ width: "100px", height: "100px", backgroundColor: "blue" }}
-          >
+          <div key={x.id} style={{ width: "initial" }}>
             <ShapeSelection onClick={handleSelectShape} shapeId={x.id} />
           </div>
         );
       })}
+      <div style={{ width: "initial" }}>
+        <div
+          onClick={(x) => dispatch(actions.passTurn())}
+          style={{
+            width: "100px",
+            height: "100px",
+            border: "1px solid black",
+            cursor: "pointer",
+            textAlign: "center",
+          }}
+        >
+          Pass
+        </div>
+      </div>
     </Row>
   );
 };

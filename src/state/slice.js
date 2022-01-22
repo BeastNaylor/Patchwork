@@ -62,6 +62,10 @@ const selectShape = (state, action) => {
   state.selectedShape = data.filter((x) => x.id === selectedShapeId)[0].cells;
 };
 
+const passTurn = (state) => {
+  //logic for passing turn
+};
+
 const rotate = (state) => {
   state.selectedShape = state.selectedShape.map((cell) => ({
     x: cell.y,
