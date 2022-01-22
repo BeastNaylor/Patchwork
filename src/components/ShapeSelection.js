@@ -1,7 +1,6 @@
 import React from "react";
-import { Row } from "reactstrap";
 
-const ShapeSelection = ({ shapeId, onClick }) => {
+const ShapeSelection = ({ shapeId, onClick, selected }) => {
   return (
     <div
       onClick={(x) => onClick(shapeId)}
@@ -11,6 +10,7 @@ const ShapeSelection = ({ shapeId, onClick }) => {
         border: "1px solid black",
         cursor: "pointer",
         textAlign: "center",
+        backgroundColor: selected ? "green" : "",
       }}
     >
       Shape {shapeId}

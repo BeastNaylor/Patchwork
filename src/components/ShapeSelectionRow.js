@@ -2,11 +2,12 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Row } from "reactstrap";
 import ShapeSelection from "./ShapeSelection";
-import { actions, shapeChoices } from "../state/slice";
+import { actions, shapeChoices, selectedShape } from "../state/slice";
 
 const ShapeSelectionRow = () => {
   const dispatch = useDispatch();
   const shapes = useSelector(shapeChoices);
+  const selectedShapeId = useSelector(selectedShape);
 
   const handleSelectShape = (shape) => {
     dispatch(actions.selectShape(shape));
@@ -20,7 +21,11 @@ const ShapeSelectionRow = () => {
       {shapes.map((x) => {
         return (
           <div key={x.id} style={{ width: "initial" }}>
-            <ShapeSelection onClick={handleSelectShape} shapeId={x.id} />
+            <ShapeSelection
+              onClick={handleSelectShape}
+              shapeId={x.id}
+              selected={x.id === selectedShapeId}
+            />
           </div>
         );
       })}

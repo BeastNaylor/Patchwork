@@ -9,21 +9,26 @@ for (let row = 1; row <= 7; row++) {
   }
 }
 
+const initialSelection = {
+  id: null,
+  cells: [],
+};
+
 const randomizeShapes = shuffle(data);
 
 const initialState = {
   cells: initalCells,
   currentCell: null,
   shapes: randomizeShapes,
-  selectedShape: null,
+  selection: initialSelection,
 };
 
 const highlightCells = (state, action) => {
   let color = "green";
   var cell = action.payload;
   state.currentCell = cell;
-  if (state.selectedShape !== null) {
-    const translatedCells = state.selectedShape.map((shape) => {
+  if (state.selection.cells.length > 0) {
+    const translatedCells = state.selection.cells.map((shape) => {
       return {
         column: shape.x + cell.column,
         row: shape.y + cell.row,
@@ -58,16 +63,16 @@ const resetCurrentCell = (state) => {
 };
 
 const selectShape = (state, action) => {
-  var selectedShapeId = action.payload;
-  state.selectedShape = data.filter((x) => x.id === selectedShapeId)[0].cells;
+  state.selection.id = action.payload;
+  state.selection.cells = data.filter((x) => x.id === action.payload)[0].cells;
 };
 
 const passTurn = (state) => {
-  //logic for passing turn
+  state.selection = initialSelection;
 };
 
 const rotate = (state) => {
-  state.selectedShape = state.selectedShape.map((cell) => ({
+  state.selection.cells = state.selection.cells.map((cell) => ({
     x: cell.y,
     y: -cell.x,
   }));
@@ -78,7 +83,7 @@ const rotate = (state) => {
 };
 
 const flip = (state) => {
-  state.selectedShape = state.selectedShape.map((cell) => ({
+  state.selection.cells = state.selection.cells.map((cell) => ({
     x: cell.x,
     y: -cell.y,
   }));
@@ -98,9 +103,11 @@ const gameSlice = createSlice({
     highlightCells,
     resetCurrentCell,
     selectShape,
+    passTurn,
   },
 });
 
+export const selectedShape = (state) => state.game.selection.id;
 export const shapeChoices = (state) => state.game.shapes.slice(0, 3);
 export const selectCell = (state, column, row) =>
   state.game.cells.filter((x) => x.column === column && x.row === row)[0];
