@@ -1,17 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 import data from "../data/shapes.json";
 import shuffle from "../lib/shuffle";
+import colors from "../data/colors";
 
 const initalCells = [];
 for (let row = 1; row <= 7; row++) {
   for (let col = 1; col <= 7; col++) {
-    initalCells.push({ column: col, row: row, color: "#c9c9c9" });
+    initalCells.push({ column: col, row: row, color: colors.default });
   }
 }
 
-const initialSelection = {
+const noShapeSelected = {
   id: null,
   cells: [],
+  status: "none",
 };
 
 const randomizeShapes = shuffle(data);
@@ -20,42 +22,63 @@ const initialState = {
   cells: initalCells,
   currentCell: null,
   shapes: randomizeShapes,
-  selection: initialSelection,
+  selectedShape: noShapeSelected,
 };
 
 const highlightCells = (state, action) => {
-  let color = "green";
+  let color = colors.valid;
   var cell = action.payload;
   state.currentCell = cell;
-  if (state.selection.cells.length > 0) {
-    const translatedCells = state.selection.cells.map((shape) => {
+  if (state.selectedShape.status === "up") {
+    const translatedCells = state.selectedShape.cells.map((shape) => {
       return {
         column: shape.x + cell.column,
         row: shape.y + cell.row,
       };
     });
+    //check if shape out of bounds
     if (
       translatedCells.some(
         (x) => x.column < 1 || x.column > 7 || x.row < 1 || x.row > 7
       )
     ) {
-      color = "red";
+      color = colors.invalid;
     }
     const cellsToHightlight = state.cells.filter((cell) => {
       return translatedCells.some((shape) => {
         return cell.column === shape.column && cell.row === shape.row;
       });
     });
-    cellsToHightlight.forEach((cell) => {
-      cell.color = color;
-    });
+    if (
+      cellsToHightlight.filter((cell) => cell.color !== colors.default).length >
+      0
+    ) {
+      color = colors.invalid;
+    }
+    cellsToHightlight
+      .filter((cell) => cell.color !== colors.filled)
+      .forEach((cell) => {
+        cell.color = color;
+      });
   }
 };
 
+const resetHighlightedCells = (state) => {
+  state.cells
+    .filter(
+      (cell) => cell.color === colors.valid || cell.color === colors.invalid
+    )
+    .forEach((cell) => {
+      cell.color = colors.default;
+    });
+};
+
 const resetGrid = (state) => {
-  state.cells.forEach((cell) => {
-    cell.color = "#c9c9c9";
-  });
+  state.cells
+    .filter((cell) => cell.color !== colors.filled)
+    .forEach((cell) => {
+      cell.color = colors.default;
+    });
 };
 
 const resetCurrentCell = (state) => {
@@ -63,16 +86,20 @@ const resetCurrentCell = (state) => {
 };
 
 const selectShape = (state, action) => {
-  state.selection.id = action.payload;
-  state.selection.cells = data.filter((x) => x.id === action.payload)[0].cells;
+  state.selectedShape.id = action.payload;
+  state.selectedShape.cells = data.filter(
+    (x) => x.id === action.payload
+  )[0].cells;
+  state.selectedShape.status = "up";
+  resetGrid(state);
 };
 
 const passTurn = (state) => {
-  state.selection = initialSelection;
+  state.selectedShape = noShapeSelected;
 };
 
 const rotate = (state) => {
-  state.selection.cells = state.selection.cells.map((cell) => ({
+  state.selectedShape.cells = state.selectedShape.cells.map((cell) => ({
     x: cell.y,
     y: -cell.x,
   }));
@@ -83,7 +110,7 @@ const rotate = (state) => {
 };
 
 const flip = (state) => {
-  state.selection.cells = state.selection.cells.map((cell) => ({
+  state.selectedShape.cells = state.selectedShape.cells.map((cell) => ({
     x: cell.x,
     y: -cell.y,
   }));
@@ -93,6 +120,25 @@ const flip = (state) => {
   }
 };
 
+const confirmTurn = (state) => {
+  state.cells
+    .filter((cell) => cell.color === colors.selected)
+    .forEach((cell) => (cell.color = colors.filled));
+};
+
+const confirmPlacement = (state) => {
+  const validCells = state.cells.filter((cell) => {
+    return cell.color === colors.valid;
+  });
+  validCells.forEach((cell) => (cell.color = colors.selected));
+  state.selectedShape.status = "down";
+};
+
+const resetTurn = (state) => {
+  resetGrid(state);
+  state.selectedShape = noShapeSelected;
+};
+
 const gameSlice = createSlice({
   name: "game",
   initialState,
@@ -100,14 +146,18 @@ const gameSlice = createSlice({
     rotate,
     flip,
     resetGrid,
+    resetHighlightedCells,
     highlightCells,
     resetCurrentCell,
     selectShape,
     passTurn,
+    confirmTurn,
+    confirmPlacement,
+    resetTurn,
   },
 });
 
-export const selectedShape = (state) => state.game.selection.id;
+export const selectedShape = (state) => state.game.selectedShape.id;
 export const shapeChoices = (state) => state.game.shapes.slice(0, 3);
 export const selectCell = (state, column, row) =>
   state.game.cells.filter((x) => x.column === column && x.row === row)[0];

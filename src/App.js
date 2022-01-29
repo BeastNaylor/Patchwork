@@ -8,6 +8,7 @@ import TileGrid from "./components/TileGrid";
 import GridControls from "./components/GridControls";
 import ShapeSelectionRow from "./components/ShapeSelectionRow";
 import ShapeOverview from "./components/ShapeOverview";
+import TurnConfirmation from "./components/TurnConfirmation";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -33,6 +34,7 @@ const App = () => {
         <TileGrid />
         <GridControls />
         <ShapeSelectionRow />
+        <TurnConfirmation />
         <ShapeOverview />
       </Container>
     </div>

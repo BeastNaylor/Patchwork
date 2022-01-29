@@ -17,9 +17,10 @@ const TileSquare = ({ column, row }) => {
       }}
       onMouseOver={(x) => dispatch(actions.highlightCells(cell))}
       onMouseOut={(x) => {
-        dispatch(actions.resetGrid());
+        dispatch(actions.resetHighlightedCells());
         dispatch(actions.resetCurrentCell());
       }}
+      onClick={(x) => dispatch(actions.confirmPlacement())}
     ></div>
   );
 };
