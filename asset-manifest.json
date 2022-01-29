@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/Patchwork/static/css/main.56e6221f.css",
-    "main.js": "/Patchwork/static/js/main.549ee79d.js",
+    "main.js": "/Patchwork/static/js/main.665d7c15.js",
     "index.html": "/Patchwork/index.html",
     "main.56e6221f.css.map": "/Patchwork/static/css/main.56e6221f.css.map",
-    "main.549ee79d.js.map": "/Patchwork/static/js/main.549ee79d.js.map"
+    "main.665d7c15.js.map": "/Patchwork/static/js/main.665d7c15.js.map"
   },
   "entrypoints": [
     "static/css/main.56e6221f.css",
-    "static/js/main.549ee79d.js"
+    "static/js/main.665d7c15.js"
   ]
 }
