@@ -43,6 +43,7 @@ const highlightCells = (state, action) => {
       )
     ) {
       color = colors.invalid;
+      state.selectedShape.status = "invalid";
     }
     const cellsToHightlight = state.cells.filter((cell) => {
       return translatedCells.some((shape) => {
@@ -54,6 +55,7 @@ const highlightCells = (state, action) => {
       0
     ) {
       color = colors.invalid;
+      state.selectedShape.status = "invalid";
     }
     cellsToHightlight
       .filter((cell) => cell.color !== colors.filled)
@@ -64,13 +66,16 @@ const highlightCells = (state, action) => {
 };
 
 const resetHighlightedCells = (state) => {
-  state.cells
-    .filter(
-      (cell) => cell.color === colors.valid || cell.color === colors.invalid
-    )
-    .forEach((cell) => {
-      cell.color = colors.default;
-    });
+  if (state.selectedShape.status !== "down") {
+    state.cells
+      .filter(
+        (cell) => cell.color === colors.valid || cell.color === colors.invalid
+      )
+      .forEach((cell) => {
+        cell.color = colors.default;
+      });
+    state.selectedShape.status = "up";
+  }
 };
 
 const resetGrid = (state) => {
@@ -96,6 +101,7 @@ const selectShape = (state, action) => {
 
 const passTurn = (state) => {
   state.selectedShape = noShapeSelected;
+  resetGrid(state);
 };
 
 const rotate = (state) => {
@@ -124,14 +130,17 @@ const confirmTurn = (state) => {
   state.cells
     .filter((cell) => cell.color === colors.selected)
     .forEach((cell) => (cell.color = colors.filled));
+  state.selectedShape = noShapeSelected;
 };
 
 const confirmPlacement = (state) => {
-  const validCells = state.cells.filter((cell) => {
-    return cell.color === colors.valid;
-  });
-  validCells.forEach((cell) => (cell.color = colors.selected));
-  state.selectedShape.status = "down";
+  if (state.selectedShape.status === "up") {
+    const validCells = state.cells.filter((cell) => {
+      return cell.color === colors.valid;
+    });
+    validCells.forEach((cell) => (cell.color = colors.selected));
+    state.selectedShape.status = "down";
+  }
 };
 
 const resetTurn = (state) => {
